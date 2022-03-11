@@ -1,41 +1,47 @@
-package com.clebersonsilva.bookstoremanager.entity;
+package com.clebersonsilva.bookstoremanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-@Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class BookDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Size(max = 200)
     private String name;
 
-    @Column(nullable = false)
-    private Integer pages;
+    @NotNull
+    private Integer cages;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer chapters;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 100)
+    @Pattern(regexp ="(?:ISBN(?:-10)?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$)[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$",
+            message = "ISBN format must be a valid format")
     private String isbn;
 
-    @Column(name = "publisher_name", nullable = false, unique = true)
+    @NotNull
+    @Size(max = 200)
     private String publisherName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @Valid
+    @NotNull
+    private AuthorDTO author;
 
     public Long getId() {
         return id;
@@ -53,12 +59,12 @@ public class Book {
         this.name = name;
     }
 
-    public Integer getPages() {
-        return pages;
+    public Integer getCages() {
+        return cages;
     }
 
-    public void setPages(Integer pages) {
-        this.pages = pages;
+    public void setCages(Integer cages) {
+        this.cages = cages;
     }
 
     public Integer getChapters() {
@@ -85,11 +91,11 @@ public class Book {
         this.publisherName = publisherName;
     }
 
-    public Author getAuthor() {
+    public AuthorDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(AuthorDTO author) {
         this.author = author;
     }
 }
